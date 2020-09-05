@@ -31,14 +31,6 @@ public class Block {
 	}
 	
 	int[] values = createTable();
-
-	public Block() {
-		t = 1;
-		l = 1;
-		b = 1;
-		r = 1;
-		end = false;
-	}
 	
 	
 	public Block(int t, int l, int b, int r) {

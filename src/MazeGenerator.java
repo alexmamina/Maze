@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 public class MazeGenerator {
 
-//SIZE 4 WORKS, OTHERS DON'T
 
     public static int size;
     public static int numWalls;
