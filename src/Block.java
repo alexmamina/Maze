@@ -31,7 +31,7 @@ public class Block {
 	}
 	
 	int[] values = createTable();
-	
+
 	
 	public Block(int t, int l, int b, int r) {
 		this.t = t;
