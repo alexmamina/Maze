@@ -1,11 +1,6 @@
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
@@ -32,16 +27,34 @@ public class MazeGrid extends JFrame{
 	
 	
 	public MazeGrid() {
-
+		MazeGenerator.size = Integer.parseInt(JOptionPane.showInputDialog("Size of maze (must " +
+				"be <64):"));
+		grid = new JButton[MazeGenerator.size][MazeGenerator.size];
 		setTitle("Maze");
 		MazeGenerator.numWalls = 2*MazeGenerator.size*MazeGenerator.size+2*MazeGenerator.size;
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		GridLayout layout = new GridLayout(MazeGenerator.size, MazeGenerator.size);
 		setLayout(layout);
 		insertButtons();
+		insertMenu();
 		if (MazeGenerator.size < 30) setSize(500, 500);
 		else setSize(850, 850);
 	}
+
+
+	private void insertMenu() {
+		JMenuBar bar = new JMenuBar();
+		JButton newgame = new JButton("New game");
+		newgame.addActionListener(e->{
+			MazeGrid newgrid = new MazeGrid();
+			newgrid.setVisible(true);
+			setVisible(false);
+		});
+		bar.add(newgame);
+		newgame.setFocusable(false);
+		setJMenuBar(bar);
+	}
+
 	private void insertButtons() {
 		//maze = createMaze(outline);
 		MazeGenerator.createWallsList();
@@ -122,6 +135,7 @@ public class MazeGrid extends JFrame{
 		
 	}
 
+
 	private Block[][] createMaze(int[][] outline) {
 		Block[][] maze = new Block[MazeGenerator.size][MazeGenerator.size];
 		for (int i = 0; i < MazeGenerator.size; i++) {
@@ -171,13 +185,6 @@ public class MazeGrid extends JFrame{
 		return cells;
 	}
 	public static void main(String[] args) {
-//SIZE AND NUM WALSS
-		//String path = "/Users/alexmamina/eclipse-workspace/Maze/" + JOptionPane.showInputDialog(
-			//	"Name of file:");
-		//outline = loadOutlineFromFile(path);
-		MazeGenerator.size = Integer.parseInt(JOptionPane.showInputDialog("Size of maze (must " +
-				"be <64):"));
-		grid = new JButton[MazeGenerator.size][MazeGenerator.size];
 		MazeGrid m = new MazeGrid();
 		m.setVisible(true);
 	}
