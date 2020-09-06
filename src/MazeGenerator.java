@@ -20,15 +20,18 @@ public class MazeGenerator {
         for (int i = 1; i <= numWalls; i++) {
             x.add(i);
         }
+        Collections.shuffle(x);
         while (x.get(0) != 1 && x.get(numWalls-1) != numWalls) Collections.shuffle(x);
         for (int i = 0; i < numWalls; i++) {
             walls[i] = x.get(i);
         }
+        System.out.println("WALLS: "+x);
         return walls;
     }
 
     //Creates an array of the top walls of all cells to create Blocks easier later (Block contains
-    // 4 numbers representing the walls it has
+    // 4 numbers representing the walls it has, e.g. in a 16-cell maze the first cell is
+    //Block(1,5,10,6)
     private static int[] createTopWallsForCells() {
         int counter = -1;
         int[] t = new int[size*size];
@@ -51,23 +54,21 @@ public class MazeGenerator {
                 listofcells[size*r+c] = cells[r][c];
             }
         }
-        cells[size-1][size-1].setEnd(true);
-        listofcells[size-1].setEnd(true);
         return cells;
     }
 
-    /*
+    /* --------------DEPTH-FIRST SEARCH GENERATION ALGORITHM ---------------------------------------
     1. Given a current cell as a parameter,
-2. Mark the current cell as visited
-3. While the current cell has any unvisited neighbour cells
-    1. Choose one of the unvisited neighbours
-    2. Remove the wall between the current cell and the chosen cell
-    3. Invoke the routine recursively for a chosen cell
+    2. Mark the current cell as visited
+    3. While the current cell has any unvisited neighbour cells
+         1. Choose one of the unvisited neighbours
+         2. Remove the wall between the current cell and the chosen cell
+         3. Invoke the routine recursively for a chosen cell
 
      */
     public static ArrayList<Integer> remWalls;
     public static HashMap<Block, Boolean> visited;
-
+    //Set all cells as unvisited
     public static void setUpForDFG() {
         remWalls = toAList(walls);
         visited = new HashMap<>();
@@ -81,22 +82,24 @@ public class MazeGenerator {
         System.out.println("Block "+b);
        ArrayList<Block> neighbours = b.getAllNeighbours(cells);
         System.out.println("Neighbours "+neighbours);
-       //Remove neighbour from list when visited -- will not work with next neighbour
        while (!checkUnvisited(neighbours, visited)) {
-           //Check unvisited
+           //Gets next unvisited random neighbour from the list
            Block n = b.getRandomNeighbour(neighbours);
            while (visited.get(n)) {
                n = b.getRandomNeighbour(neighbours);
            }
            System.out.println("Neighbour "+n);
            remWalls.remove(remWalls.indexOf(b.getCommonWall(n)));
+           //Remove it from the list of neighbours for easier while loop later
            neighbours.remove(n);
            dfGeneration(n);
        }
+       //Dead end
         System.out.println("Done");
         return remWalls;
     }
 
+    //Checks if all neighbours are visited - returns False if some unvisited
     private static boolean checkUnvisited(ArrayList<Block> neighbours, HashMap<Block, Boolean> visited) {
         boolean result = true;
         for (Block n : neighbours) {
@@ -105,6 +108,7 @@ public class MazeGenerator {
         return result;
     }
 
+    //Convert array to arraylist - library function ddi not work
     private static ArrayList<Integer> toAList(int[] a) {
         ArrayList<Integer> res = new ArrayList<>();
         for (int i = 0; i < a.length; i++) {
@@ -114,6 +118,8 @@ public class MazeGenerator {
         return res;
     }
 
+    //Convert blocks that have numbers of walls in them to "binary" (2=1, 1=0) blocks for easier
+    //border painting
     public static void convertToRegBlocks(ArrayList<Integer> remWalls) {
         //convert 1221 to numbers, then it will be the mazegrid.outline
         for (int r = 0; r < size; r++) {
@@ -123,12 +129,12 @@ public class MazeGenerator {
                 if (remWalls.contains(b.getL())) b.setL(2); else b.setL(1);
                 if (remWalls.contains(b.getB())) b.setB(2); else b.setB(1);
                 if (remWalls.contains(b.getR())) b.setR(2); else b.setR(1);
-                System.out.println(r+" "+c+" "+b);
             }
         }
     }
+//-------------------------------DFS END-----------------------------------------------------------
 
-
+    //Main for testing algorithms before integrating them into the UI
     public static void main(String[] args) {
        // size = 4;
        // numWalls = 2*size*size+2*size;

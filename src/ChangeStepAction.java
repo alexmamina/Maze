@@ -14,51 +14,6 @@ public class ChangeStepAction implements KeyListener{
 	
 	public JButton b;
 	
-
-	/*public void actionPerformed(ActionEvent e) {
-		if (e.getSource() instanceof JButton) {
-			b = (JButton) e.getSource();
-		}
-
-		if (b.getBackground().equals(Color.white) )  {
-
-			for (int i = 0; i < MazeGrid.grid.length; i++) {
-				for (int j = 0; j < MazeGrid.grid.length; j++) {
-					if (MazeGrid.grid[i][j].equals(b)) {
-						if (i > 0 && top(b) == 0 && bottom(MazeGrid.grid[i-1][j]) == 0 && MazeGrid.grid[i-1][j].getBackground().equals(Color.yellow)
-						 || i < MazeGrid.grid.length-1 && bottom(b) == 0 && top(MazeGrid.grid[i+1][j]) == 0 && MazeGrid.grid[i+1][j].getBackground().equals(Color.yellow)
-						 || j > 0 && left(b) == 0 && right(MazeGrid.grid[i][j-1]) == 0 && MazeGrid.grid[i][j-1].getBackground().equals(Color.yellow)
-						 || j < MazeGrid.grid.length-1 && right(b) == 0 && left(MazeGrid.grid[i][j+1]) == 0 && MazeGrid.grid[i][j+1].getBackground().equals(Color.yellow)) {
-							b.setBackground(Color.YELLOW);
-							b.setForeground(Color.yellow);
-							break;
-						}
-					
-					}
-				}
-			}
-		}
-		else {
-			b.setBackground(Color.WHITE);
-			b.setForeground(Color.white);
-			
-		}
-		
-		if (b.getText().equals("true")) {
-			JOptionPane.showMessageDialog(null, "Congratulations, you win!");
-			for (int i = 0; i < MazeGrid.grid.length; i++) {
-				for (int j = 0; j < MazeGrid.grid.length; j++) {
-					if (!(i == 0 && j == 0)) {
-					MazeGrid.grid[i][j].setBackground(Color.white);
-					MazeGrid.grid[i][j].setForeground(Color.white);
-					}
-				}
-			}
-		}
-	}
-	*/
-	
-	
 	public static int top(JButton b) {
 		return b.getBorder().getBorderInsets(b).top;
 	}

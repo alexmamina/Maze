@@ -14,10 +14,6 @@ import javax.swing.*;
 public class MazeGrid extends JFrame{
 
 
-	public static int[][] outline3 = {{6,7,6},{15,15,15},{8,5,8}};
-	//public static int[][] outline = {{14,6,7,14,6},{3,15,15,0,15},{10,5,10,14,12},{15,4,12,3,15},{8,14,5,8,11}};
-	
-	//public static int[][] outline = generator(15);
 	public static int[][] outline;
 	
 	public Block[][] maze;
@@ -135,33 +131,22 @@ public class MazeGrid extends JFrame{
 		
 	}
 
-
+//--------------------------------------OLD--------------------------------------------------------
+	//For older versions: create the maze from decimal values loaded from file
 	private Block[][] createMaze(int[][] outline) {
 		Block[][] maze = new Block[MazeGenerator.size][MazeGenerator.size];
 		for (int i = 0; i < MazeGenerator.size; i++) {
 			for (int j = 0; j < MazeGenerator.size; j++) {
-				if (i == MazeGenerator.size-1 && j == MazeGenerator.size-1) maze[i][j] = new Block(outline[i][j], true); 
-				else maze[i][j] = new Block(outline[i][j], false); 
+				if (i == MazeGenerator.size-1 && j == MazeGenerator.size-1)
+					maze[i][j] = new Block(outline[i][j]);
+				else maze[i][j] = new Block(outline[i][j]);
 			}
 		}
 		return maze;
 	}
-	
 
-	private static int[][] generator(int k) {
-		//Must return a valid maze. Must have walls, entrance and exit in the same place and a valid route.
-		int[][] result = new int[k][k];
-		for (int i = 0; i < result.length; i++) {
-			for (int j = 0; j < result.length; j++) {
-				Random random = new Random();
-				result[i][j] = random.nextInt((15-0) + 1) + 0;
-			}
-		}
-		
-		return result;
-	}
 
-	
+	//For older versions: load values from file and convert into regular blocks
 	public static int[][] loadOutlineFromFile(String path) {
 		Path name = Paths.get(path);
 		int length = Integer.parseInt(path.substring(41, 43));
@@ -184,6 +169,12 @@ public class MazeGrid extends JFrame{
         }
 		return cells;
 	}
+//-------------------------------------------------------------------------------------------------
+
+
+
+
+
 	public static void main(String[] args) {
 		MazeGrid m = new MazeGrid();
 		m.setVisible(true);
