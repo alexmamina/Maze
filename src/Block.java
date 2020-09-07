@@ -28,18 +28,21 @@ public class Block {
 		
 	}
 
-	public Block getNeighbour(int wall, Block[][] cells) {
-		for (int r = 0; r <
-				MazeGenerator.size; r++) {
+	public static Block[] getTwoNeighbours(int wall, Block[][] cells) {
+		Block[] result = new Block[2];
+		int counter = 0;
+		for (int r = 0; r < MazeGenerator.size; r++) {
 			for (int c = 0; c < MazeGenerator.size; c++) {
 				Block b = cells[r][c];
-				if (!this.equals(b)) {
+
 					if (b.getT() == wall || b.getL() == wall
-							|| b.getB() == wall || b.getR() == wall) return b;
-				}
+							|| b.getB() == wall || b.getR() == wall) {
+						result[counter] = b;
+						counter++;
+					}
 			}
 		}
-		return null;
+		return result;
 	}
 
 	public ArrayList<Block> getAllNeighbours(Block[][] cells) {
@@ -68,7 +71,6 @@ public class Block {
 		else if (a.getR() == this.l) return this.l;
 		else return 10000;
 	}
-
 
 	public boolean equals(Block b) {
 		return this.t == b.getT() && this.l == b.getL() && this.b == b.getB() && this.r == b.getR();

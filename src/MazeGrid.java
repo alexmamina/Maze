@@ -51,19 +51,21 @@ public class MazeGrid extends JFrame{
 	}
 
 	private void insertButtons() {
-		//maze = createMaze(outline);
 		MazeGenerator.createWallsList();
 		MazeGenerator.createListOfBlocks();
 
-		MazeGenerator.setUpForGen();
+		//MazeGenerator.setUpForGen();
 		//ArrayList<Integer> w = MazeGenerator.dfGeneration(MazeGenerator.cells[0][0]);
-		ArrayList<Integer> w = MazeGenerator.iterative();
+		//ArrayList<Integer> w = MazeGenerator.iterative();
+		MazeGenerator.kruskalsPrep();
+		ArrayList<Integer> w = MazeGenerator.kruskal();
+
 		MazeGenerator.convertToRegBlocks(w);
 		maze = MazeGenerator.cells;
 		for (int i = 0; i < MazeGenerator.size; i++) {
 			for (int j = 0; j < MazeGenerator.size; j++) {
 				Block c = maze[i][j];
-			
+				System.out.println(c);
 				JButton b = new JButton();
 				
 				b.setBorder(BorderFactory.createMatteBorder(c.getT()-1, c.getL()-1, c.getB()-1, c.getR()-1, Color.BLACK));
