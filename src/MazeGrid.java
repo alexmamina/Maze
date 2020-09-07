@@ -6,7 +6,6 @@ import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.*;
@@ -56,8 +55,9 @@ public class MazeGrid extends JFrame{
 		MazeGenerator.createWallsList();
 		MazeGenerator.createListOfBlocks();
 
-		MazeGenerator.setUpForDFG();
-		ArrayList<Integer> w = MazeGenerator.dfGeneration(MazeGenerator.cells[0][0]);
+		MazeGenerator.setUpForGen();
+		//ArrayList<Integer> w = MazeGenerator.dfGeneration(MazeGenerator.cells[0][0]);
+		ArrayList<Integer> w = MazeGenerator.iterative();
 		MazeGenerator.convertToRegBlocks(w);
 		maze = MazeGenerator.cells;
 		for (int i = 0; i < MazeGenerator.size; i++) {
@@ -128,7 +128,6 @@ public class MazeGrid extends JFrame{
 				grid[i][j] = b; 
 			}
 		}
-		
 	}
 
 //--------------------------------------OLD--------------------------------------------------------
