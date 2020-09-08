@@ -54,12 +54,12 @@ public class MazeGrid extends JFrame{
 		MazeGenerator.createWallsList();
 		MazeGenerator.createListOfBlocks();
 
-		//MazeGenerator.setUpForGen();
+		MazeGenerator.setUpForGen();
 		//ArrayList<Integer> w = MazeGenerator.dfGeneration(MazeGenerator.cells[0][0]);
 		//ArrayList<Integer> w = MazeGenerator.iterative();
-		MazeGenerator.kruskalsPrep();
-		ArrayList<Integer> w = MazeGenerator.kruskal();
-
+		//MazeGenerator.kruskalsPrep();
+		//ArrayList<Integer> w = MazeGenerator.kruskal();
+		ArrayList<Integer> w = MazeGenerator.prim();
 		MazeGenerator.convertToRegBlocks(w);
 		maze = MazeGenerator.cells;
 		for (int i = 0; i < MazeGenerator.size; i++) {

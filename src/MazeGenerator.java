@@ -53,8 +53,8 @@ public class MazeGenerator {
         }
         return cells;
     }
-    public static ArrayList<Integer> remWalls;
-    public static HashMap<Block, Boolean> visited;
+    private static ArrayList<Integer> remWalls;
+    private static HashMap<Block, Boolean> visited;
     //Set all cells as unvisited
     public static void setUpForGen() {
         remWalls = toAList(walls);
@@ -73,11 +73,11 @@ public class MazeGenerator {
         return result;
     }
 
-    //Convert array to arraylist - library function ddi not work
+    //Convert array to arraylist - library function did not work
     private static ArrayList<Integer> toAList(int[] a) {
         ArrayList<Integer> res = new ArrayList<>();
-        for (int i = 0; i < a.length; i++) {
-            res.add(a[i]);
+        for (int value : a) {
+            res.add(value);
         }
 
         return res;
@@ -182,7 +182,7 @@ public class MazeGenerator {
             1. Remove the current wall.
             2. Join the sets of the formerly divided cells.
  */
-public static ArrayList<HashSet<Block>> sets = new ArrayList<>();
+private static ArrayList<HashSet<Block>> sets = new ArrayList<>();
 
 //Creates a list of sets, each containing one cell
 public static void kruskalsPrep() {
@@ -218,7 +218,7 @@ public static ArrayList<Integer> kruskal() {
         System.out.println("NeighSets "+neighbSets);
         if (distinct) {
             System.out.println("Distinct sets");
-            remWalls.remove(remWalls.indexOf(w));
+            remWalls.remove((Integer) w);
             System.out.println("Rem walls "+remWalls);
             //Combine the neighbouring sets into one (union)
             HashSet<Block> union = new HashSet<>();
@@ -233,6 +233,56 @@ public static ArrayList<Integer> kruskal() {
 }
 //------------------------------------KRUSKAL'S END------------------------------------------------
 
+/*-----------------------RANDOMIZED PRIM'S ALGORITHM-----------------------------------------------
+    1. Start with a grid full of walls.
+    2. Pick a cell, mark it as part of the maze. Add the walls of the cell to the wall list.
+    3. While there are walls in the list:
+        1. Pick a random wall from the list.
+        If only one of the two cells that the wall divides is visited, then:
+            1. Make the wall a passage and mark the unvisited cell as part of the maze.
+            2. Add the neighboring walls of the cell to the wall list.
+        2. Remove the wall from the list.
+ */
+
+public static ArrayList<Integer> prim() {
+    ArrayList<Integer> walllist = new ArrayList<>();
+    Block b = cells[0][0];
+    visited.replace(b,false,true);
+    ArrayList<Integer> allwalls = toAList(b.getAllWalls());
+    //Add the block's walls to the list of walls
+    walllist.addAll(allwalls);
+    while (!walllist.isEmpty()) {
+        System.out.println("Walllist "+walllist);
+        //Get a random wall from the list
+        int w = walllist.get((new Random().nextInt(walllist.size())));
+        System.out.println("Wall "+w);
+        Block[] ns = Block.getTwoNeighbours(w, cells);
+        System.out.println("Neighbours: "+ns[0]+", "+ns[1]);
+        //If a border cell
+        if (ns[0] == null || ns[1] == null) {
+            walllist.remove((Object) w);
+            continue;
+        }
+        //If only one of the neighbours is visited (one or the other)
+        else if (visited.get(ns[0]) && !visited.get(ns[1])) {
+            remWalls.remove((Object) w);
+            visited.replace(ns[1],false,true);
+            //Add its walls to the list
+            walllist.addAll(toAList(ns[1].getAllWalls()));
+
+        } else if (visited.get(ns[1]) && !visited.get(ns[0])){
+            remWalls.remove((Object) w);
+            visited.replace(ns[0],false,true);
+            walllist.addAll(toAList(ns[0].getAllWalls()));
+        }
+        walllist.remove((Object) w);
+    }
+
+    return remWalls;
+}
+
+//------------------------------------PRIM'S END---------------------------------------------------
+
     //Main for testing algorithms before integrating them into the UI
     public static void main(String[] args) {
         size = 4;
@@ -240,11 +290,12 @@ public static ArrayList<Integer> kruskal() {
         createWallsList();
         Block[][] test = createListOfBlocks();
 
-        //setUpForGen();
-        kruskalsPrep();
+        setUpForGen();
+        //kruskalsPrep();
         //ArrayList<Integer> w = dfGeneration(test[0][0]);
         //ArrayList<Integer> w = iterative();
-        ArrayList<Integer> w = kruskal();
+        //ArrayList<Integer> w = kruskal();
+        ArrayList<Integer> w = prim();
         for (int i : w) {
             System.out.println(i);
         }

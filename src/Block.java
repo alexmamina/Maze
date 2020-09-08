@@ -72,6 +72,15 @@ public class Block {
 		else return 10000;
 	}
 
+	public int[] getAllWalls() {
+		int[] ws = new int[4];
+		ws[0] = this.t;
+		ws[1] = this.l;
+		ws[2] = this.b;
+		ws[3] = this.r;
+		return ws;
+	}
+
 	public boolean equals(Block b) {
 		return this.t == b.getT() && this.l == b.getL() && this.b == b.getB() && this.r == b.getR();
 	}
