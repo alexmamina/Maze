@@ -22,15 +22,19 @@ public class MazeGrid extends JFrame{
 	
 	
 	public MazeGrid() {
-		MazeGenerator.size = Integer.parseInt(JOptionPane.showInputDialog("Size of maze (must " +
-				"be <64):"));
-		grid = new JButton[MazeGenerator.size][MazeGenerator.size];
 		setTitle("Maze");
-		MazeGenerator.numWalls = 2*MazeGenerator.size*MazeGenerator.size+2*MazeGenerator.size;
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		GridLayout layout = new GridLayout(MazeGenerator.size, MazeGenerator.size);
-		setLayout(layout);
-		insertButtons();
+		String[] ops = {"D: Long paths, easy (<60)", "I: Long paths, easy (any size)", "K: " +
+				"Shorter paths, " +
+				"harder (smaller maze)", "P: Shorter paths, harder (any size)"};
+		int choice = JOptionPane.showOptionDialog(null,
+				"What kind of maze would you like to play?\n" +
+						"Harder options may not have an exit!\n" +
+						"When choosing a maze of size > 40, wait a little after making the first " +
+						"step.\n The game needs to load", "Maze options",
+				JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.QUESTION_MESSAGE,null,ops,null);
+		insertButtons(choice);
 		insertMenu();
 		if (MazeGenerator.size < 30) setSize(500, 500);
 		else setSize(850, 850);
@@ -50,22 +54,44 @@ public class MazeGrid extends JFrame{
 		setJMenuBar(bar);
 	}
 
-	private void insertButtons() {
+	private void insertButtons(int choice) {
+		MazeGenerator.size = Integer.parseInt(JOptionPane.showInputDialog("Size of maze:"));
+		GridLayout layout = new GridLayout(MazeGenerator.size, MazeGenerator.size);
+		setLayout(layout);
+		grid = new JButton[MazeGenerator.size][MazeGenerator.size];
+		MazeGenerator.numWalls = 2*MazeGenerator.size*MazeGenerator.size+2*MazeGenerator.size;
 		MazeGenerator.createWallsList();
 		MazeGenerator.createListOfBlocks();
-
-		MazeGenerator.setUpForGen();
-		//ArrayList<Integer> w = MazeGenerator.dfGeneration(MazeGenerator.cells[0][0]);
-		//ArrayList<Integer> w = MazeGenerator.iterative();
-		//MazeGenerator.kruskalsPrep();
-		//ArrayList<Integer> w = MazeGenerator.kruskal();
-		ArrayList<Integer> w = MazeGenerator.prim();
+		ArrayList<Integer> w = new ArrayList<>();
+		switch (choice) {
+			case 0:
+				MazeGenerator.setUpForGen();
+				w = MazeGenerator.dfGeneration(MazeGenerator.cells[0][0]);
+				System.out.println("DFS end");
+				break;
+			case 1:
+				MazeGenerator.setUpForGen();
+				w = MazeGenerator.iterative();
+				System.out.println("ITER end");
+				break;
+			case 2:
+				MazeGenerator.kruskalsPrep();
+				w = MazeGenerator.kruskal();
+				System.out.println("KRU end");
+				break;
+			case 3:
+				MazeGenerator.setUpForGen();
+				w = MazeGenerator.prim();
+				System.out.println("PRIM end");
+				break;
+			default:
+				JOptionPane.showMessageDialog(null, "Oops");
+		}
 		MazeGenerator.convertToRegBlocks(w);
 		maze = MazeGenerator.cells;
 		for (int i = 0; i < MazeGenerator.size; i++) {
 			for (int j = 0; j < MazeGenerator.size; j++) {
 				Block c = maze[i][j];
-				System.out.println(c);
 				JButton b = new JButton();
 				
 				b.setBorder(BorderFactory.createMatteBorder(c.getT()-1, c.getL()-1, c.getB()-1, c.getR()-1, Color.BLACK));
