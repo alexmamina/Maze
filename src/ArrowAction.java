@@ -21,17 +21,17 @@ public class ArrowAction implements  KeyListener {
 						case (KeyEvent.VK_RIGHT) :
 							if (j<MazeGrid.grid.length-1 && ChangeStepAction.left(MazeGrid.grid[i][j+1]) == 0
 							&& ChangeStepAction.right(MazeGrid.grid[i][j]) == 0
-							&& !MazeGrid.grid[i][j+1].getBackground().equals(new Color(174, 142, 255))) {
+							&& !MazeGrid.grid[i][j+1].getBackground().equals(MazeGrid.path)) {
 							
-							MazeGrid.grid[i][j+1].setBackground(new Color(174, 142, 255));	
+							MazeGrid.grid[i][j+1].setBackground(MazeGrid.path);
 							MazeGrid.grid[i][j+1].requestFocus();
 							
 							checkEnd(MazeGrid.grid[i][j+1]);
 							} else if (j<MazeGrid.grid.length-1 && ChangeStepAction.left(MazeGrid.grid[i][j+1]) == 0
 							&& ChangeStepAction.right(MazeGrid.grid[i][j]) == 0
-							&& MazeGrid.grid[i][j+1].getBackground().equals(new Color(174, 142, 255))) {
+							&& MazeGrid.grid[i][j+1].getBackground().equals(MazeGrid.path)) {
 								
-								MazeGrid.grid[i][j].setBackground(new Color(251, 255, 190));
+								MazeGrid.grid[i][j].setBackground(MazeGrid.back);
 								MazeGrid.grid[i][j+1].requestFocus();
 							}
 						
@@ -40,47 +40,47 @@ public class ArrowAction implements  KeyListener {
 						case (KeyEvent.VK_LEFT) :
 							if (j > 0 && ChangeStepAction.left(MazeGrid.grid[i][j]) == 0
 									&& ChangeStepAction.right(MazeGrid.grid[i][j-1]) == 0
-									&& !MazeGrid.grid[i][j-1].getBackground().equals(new Color(174, 142, 255))) {
+									&& !MazeGrid.grid[i][j-1].getBackground().equals(MazeGrid.path)) {
 								
-							 MazeGrid.grid[i][j-1].setBackground(new Color(174, 142, 255));
+							 MazeGrid.grid[i][j-1].setBackground(MazeGrid.path);
 							
 							 MazeGrid.grid[i][j-1].requestFocus();
 							 
 							 checkEnd(MazeGrid.grid[i][j-1]);
 							} else if (j > 0 && ChangeStepAction.left(MazeGrid.grid[i][j]) == 0
 									&& ChangeStepAction.right(MazeGrid.grid[i][j-1]) == 0
-									&& MazeGrid.grid[i][j-1].getBackground().equals(new Color(174, 142, 255))) {
+									&& MazeGrid.grid[i][j-1].getBackground().equals(MazeGrid.path)) {
 								
-								 MazeGrid.grid[i][j].setBackground(new Color(251, 255, 190));
+								 MazeGrid.grid[i][j].setBackground(MazeGrid.back);
 								 MazeGrid.grid[i][j-1].requestFocus();
 							}
 						break;
 						case (KeyEvent.VK_UP) :
 							if (i>0 && ChangeStepAction.top(MazeGrid.grid[i][j]) == 0
 									&& ChangeStepAction.bottom(MazeGrid.grid[i-1][j]) == 0
-									&& !MazeGrid.grid[i-1][j].getBackground().equals(new Color(174, 142, 255))) {
-							 MazeGrid.grid[i-1][j].setBackground(new Color(174, 142, 255));
+									&& !MazeGrid.grid[i-1][j].getBackground().equals(MazeGrid.path)) {
+							 MazeGrid.grid[i-1][j].setBackground(MazeGrid.path);
 							 
 							MazeGrid.grid[i-1][j].requestFocus();
 							checkEnd(MazeGrid.grid[i-1][j]);
 							} else if (i>0 && ChangeStepAction.top(MazeGrid.grid[i][j]) == 0
 									&& ChangeStepAction.bottom(MazeGrid.grid[i-1][j]) == 0
-									&& MazeGrid.grid[i-1][j].getBackground().equals(new Color(174, 142, 255))) {
-								MazeGrid.grid[i][j].setBackground(new Color(251, 255, 190));
+									&& MazeGrid.grid[i-1][j].getBackground().equals(MazeGrid.path)) {
+								MazeGrid.grid[i][j].setBackground(MazeGrid.back);
 								 MazeGrid.grid[i-1][j].requestFocus();
 							}
 						break;
 						case (KeyEvent.VK_DOWN) :
 							if (i< MazeGrid.grid.length-1 && ChangeStepAction.top(MazeGrid.grid[i+1][j]) == 0
 									&& ChangeStepAction.bottom(MazeGrid.grid[i][j]) == 0
-									&& !MazeGrid.grid[i+1][j].getBackground().equals(new Color(174, 142, 255))) {
-							MazeGrid.grid[i+1][j].setBackground(new Color(174, 142, 255));
+									&& !MazeGrid.grid[i+1][j].getBackground().equals(MazeGrid.path)) {
+							MazeGrid.grid[i+1][j].setBackground(MazeGrid.path);
 							 MazeGrid.grid[i+1][j].requestFocus();
 							 checkEnd(MazeGrid.grid[i+1][j]);
 							} else if (i< MazeGrid.grid.length-1 && ChangeStepAction.top(MazeGrid.grid[i+1][j]) == 0
 									&& ChangeStepAction.bottom(MazeGrid.grid[i][j]) == 0
-									&& MazeGrid.grid[i+1][j].getBackground().equals(new Color(174, 142, 255))) {
-								MazeGrid.grid[i][j].setBackground(new Color(251, 255, 190));
+									&& MazeGrid.grid[i+1][j].getBackground().equals(MazeGrid.path)) {
+								MazeGrid.grid[i][j].setBackground(MazeGrid.back);
 								 MazeGrid.grid[i+1][j].requestFocus();
 							}
 						break;
@@ -98,17 +98,17 @@ public class ArrowAction implements  KeyListener {
 		if (a.getText().equals("!!!")) {
 			JOptionPane.showMessageDialog(null, "Congratulations, you win! If you want to start a" +
 					" new game, press the button above the maze");
-			for (int l = 0; l < MazeGrid.grid.length; l++) {
+			/*for (int l = 0; l < MazeGrid.grid.length; l++) {
 				for (int m = 0; m < MazeGrid.grid.length; m++) {
 					
-					MazeGrid.grid[l][m].setBackground(new Color(251, 255, 190));
+					MazeGrid.grid[l][m].setBackground(MazeGrid.back);
 					
 					MazeGrid.grid[0][0].requestFocus();
-					MazeGrid.grid[0][0].setBackground(new Color(174, 142, 255));
+					MazeGrid.grid[0][0].setBackground(MazeGrid.path);
 					
-					}
 				}
-			}
+			} */
+		}
 		
 	}
 	
