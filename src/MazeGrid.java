@@ -159,22 +159,22 @@ public class MazeGrid extends JFrame{
 			case 0:
 				MazeGenerator.setUpForGen();
 				w = MazeGenerator.dfGeneration(MazeGenerator.cells[0][0]);
-				System.out.println("DFS end");
+				System.out.println("Depth First Search");
 				break;
 			case 1:
 				MazeGenerator.setUpForGen();
 				w = MazeGenerator.iterative();
-				System.out.println("ITER end");
+				System.out.println("Iterative");
 				break;
 			case 2:
 				MazeGenerator.kruskalsPrep();
 				w = MazeGenerator.kruskal();
-				System.out.println("KRU end");
+				System.out.println("Kruskal");
 				break;
 			case 3:
 				MazeGenerator.setUpForGen();
 				w = MazeGenerator.prim();
-				System.out.println("PRIM end");
+				System.out.println("Prim");
 				break;
 			default:
 				JOptionPane.showMessageDialog(null, "Oops");

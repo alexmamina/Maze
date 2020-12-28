@@ -109,8 +109,9 @@ public class ArrowAction implements  KeyListener {
 
 
 		if (a.getText().equals("!!!")) {
-			JOptionPane.showMessageDialog(null, "Congratulations, you win! If you want to start a" +
-					" new game, press the button above the maze");
+			JOptionPane.showMessageDialog(null, "Congratulations, you win! \nIf you want to start" +
+					" a" +
+					" new game, press the button in the top left");
 			/*for (int l = 0; l < MazeGrid.grid.length; l++) {
 				for (int m = 0; m < MazeGrid.grid.length; m++) {
 					
