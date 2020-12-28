@@ -189,8 +189,8 @@ public class MazeGrid extends JFrame{
 				}
 	
 				ArrowAction lol = new ArrowAction();
-				if (ChangeStepAction.top(b) > 0 && ChangeStepAction.left(b) > 0 && 
-						ChangeStepAction.bottom(b) > 0 && ChangeStepAction.right(b) > 0) {
+				if (ArrowAction.top(b) > 0 && ArrowAction.left(b) > 0 &&
+						ArrowAction.bottom(b) > 0 && ArrowAction.right(b) > 0) {
 					b.addMouseListener(new MouseListener() {
 						
 						@Override

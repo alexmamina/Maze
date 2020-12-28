@@ -22,7 +22,6 @@ public class MazeGenerator {
         for (int i = 0; i < numWalls; i++) {
             walls[i] = x.get(i);
         }
-        System.out.println("WALLS: "+x);
         return walls;
     }
 
@@ -110,24 +109,19 @@ public class MazeGenerator {
 
     public static ArrayList<Integer> dfGeneration(Block b) {
         visited.replace(b, false, true);
-        System.out.println("Rem walls "+remWalls);
-        System.out.println("Block "+b);
         ArrayList<Block> neighbours = b.getAllNeighbours(cells);
-        System.out.println("Neighbours "+neighbours);
         while (!checkUnvisited(neighbours, visited)) {
             //Gets next unvisited random neighbour from the list
             Block n = b.getRandomNeighbour(neighbours);
             while (visited.get(n)) {
                 n = b.getRandomNeighbour(neighbours);
             }
-            System.out.println("Neighbour "+n);
             remWalls.remove(remWalls.indexOf(b.getCommonWall(n)));
             //Remove it from the list of neighbours for easier while loop later
             neighbours.remove(n);
             dfGeneration(n);
         }
         //Dead end
-        System.out.println("Done");
         return remWalls;
     }
 //-------------------------------DFS END-----------------------------------------------------------
@@ -150,10 +144,7 @@ public class MazeGenerator {
        stack.push(init);
        while (!stack.isEmpty()) {
            Block curr = (Block) stack.pop();
-           System.out.println("Rem walls " + remWalls);
-           System.out.println("Block " + curr);
            ArrayList<Block> neighbours = curr.getAllNeighbours(cells);
-           System.out.println("Neighbours " + neighbours);
            if (!checkUnvisited(neighbours, visited)) {
                stack.push(curr);
                //Gets next unvisited random neighbour from the list
@@ -161,16 +152,13 @@ public class MazeGenerator {
                while (visited.get(n)) {
                    n = curr.getRandomNeighbour(neighbours);
                }
-               System.out.println("Neighbour " + n);
                remWalls.remove(remWalls.indexOf(curr.getCommonWall(n)));
                //Remove it from the list of neighbours for easier while loop later
                neighbours.remove(n);
                visited.replace(n, false, true);
                stack.push(n);
            }
-           System.out.println("Done");
        }
-       System.out.println("Finished loop");
         return remWalls;
    }
 //------------------------------------ITERATIVE END------------------------------------------------
@@ -198,15 +186,12 @@ public static void kruskalsPrep() {
 
 public static ArrayList<Integer> kruskal() {
     for (int w : walls) {
-        System.out.println("Wall "+w);
         ArrayList<HashSet<Block>> neighbSets = new ArrayList<>();
         Block[] neighbours = Block.getTwoNeighbours(w, cells);
         //If it's a border cell, skip to next wall
         if (neighbours[1] == null) continue;
-        System.out.println("Blocks "+neighbours[0]+", "+neighbours[1]);
         boolean distinct = true;
         for (HashSet<Block> s : sets) {
-            System.out.println("Set "+s);
             if (s.contains(neighbours[0]) && s.contains(neighbours[1])) {
                 distinct = false;
                 break;
@@ -215,11 +200,8 @@ public static ArrayList<Integer> kruskal() {
                 neighbSets.add(s);
             }
         }
-        System.out.println("NeighSets "+neighbSets);
         if (distinct) {
-            System.out.println("Distinct sets");
             remWalls.remove((Integer) w);
-            System.out.println("Rem walls "+remWalls);
             //Combine the neighbouring sets into one (union)
             HashSet<Block> union = new HashSet<>();
             union.addAll(neighbSets.get(0));
@@ -252,12 +234,9 @@ public static ArrayList<Integer> prim() {
     //Add the block's walls to the list of walls
     walllist.addAll(allwalls);
     while (!walllist.isEmpty()) {
-        System.out.println("Walllist "+walllist);
         //Get a random wall from the list
         int w = walllist.get((new Random().nextInt(walllist.size())));
-        System.out.println("Wall "+w);
         Block[] ns = Block.getTwoNeighbours(w, cells);
-        System.out.println("Neighbours: "+ns[0]+", "+ns[1]);
         //If a border cell
         if (ns[0] == null || ns[1] == null) {
             walllist.remove((Object) w);
@@ -296,14 +275,8 @@ public static ArrayList<Integer> prim() {
         //ArrayList<Integer> w = iterative();
         //ArrayList<Integer> w = kruskal();
         ArrayList<Integer> w = prim();
-        for (int i : w) {
-            System.out.println(i);
-        }
+
         convertToRegBlocks(w);
-         for (int r = 0; r < size; r++) {
-            for (int c = 0; c < size; c++) {
-                 System.out.println(test[r][c]);
-            }
-         }
+
     }
 }
