@@ -1,11 +1,11 @@
-import java.awt.Color;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import javax.swing.*;
@@ -26,16 +26,30 @@ public class MazeGrid extends JFrame{
     public MazeGrid() {
 		setTitle("Maze");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
 		String[] ops = {"D: Long paths, easy (<60)", "I: Long paths, easy (any size)", "K: " +
 				"Shorter paths, " +
 				"harder (smaller maze)", "P: Shorter paths, harder (any size)"};
-		int choice = JOptionPane.showOptionDialog(null,
+
+		/*int choice = JOptionPane.showOptionDialog(null,
 				"What kind of maze would you like to play?\n" +
 						"Harder options may not have an exit!\n" +
 						"When choosing a maze of size > 40, wait a little after making the first " +
 						"step.\n The game needs to load", "Maze options",
 				JOptionPane.YES_NO_CANCEL_OPTION,
 				JOptionPane.QUESTION_MESSAGE,null,ops,null);
+
+		 */
+        JOptionPane op = new JOptionPane(
+                "When choosing size > 40, wait a little after making the first step");
+        op.setOptions(ops);
+        //Set the options in a column, not in one long row
+        ((Container)op.getComponent(1)).setLayout(new GridLayout(4, 1));
+        JDialog dlg = op.createDialog("What kind of maze would you like to play?");
+        dlg.setVisible(true);
+        String opt = (String) op.getValue();
+        //Find index of that option in the array of options
+		int choice = Arrays.binarySearch(ops, opt);
 		insertButtons(choice);
 		insertMenu();
 		if (MazeGenerator.size < 30) setSize(500, 500);
