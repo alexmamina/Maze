@@ -72,6 +72,40 @@ public class Block {
 		else return 10000;
 	}
 
+	//Returns list of coordinates of blocks that don't have a wall
+	//with the current block
+	public  ArrayList<int[]> getPassage(int len, int i, int j) {
+		ArrayList<int[]> result = new ArrayList<>();
+		//cells is already 2 or 1
+		int[] r = new int[2];
+		if (this.getT() == 1 && i > 0) {
+			r = new int[2];
+			r[0] = i-1;
+			r[1] = j;
+			result.add(r);
+		}
+		if (this.getL() == 1 && j > 0) {
+			r = new int[2];
+			r[0] = i;
+			r[1] = j-1;
+			result.add(r);
+		}
+		if (this.getB() == 1 && i < len-1) {
+			r = new int[2];
+			r[0] = i+1;
+			r[1] = j;
+			result.add(r);
+		}
+		if (this.getR() == 1 && j < len-1) {
+			r = new int[2];
+			r[0] = i;
+			r[1] = j+1;
+			result.add(r);
+		}
+
+		return result;
+	}
+
 	public int[] getAllWalls() {
 		int[] ws = new int[4];
 		ws[0] = this.t;

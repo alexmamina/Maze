@@ -15,7 +15,7 @@ public class MazeGrid extends JFrame{
 
 	public static int[][] outline;
 	
-	public Block[][] maze;
+	public static Block[][] maze;
 	
 	public static JButton[][] grid;
 	
@@ -27,19 +27,11 @@ public class MazeGrid extends JFrame{
 		setTitle("Maze");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+		//Get the level of difficulty
 		String[] ops = {"D: Long paths, easy (<60)", "I: Long paths, easy (any size)", "K: " +
 				"Shorter paths, " +
 				"harder (smaller maze)", "P: Shorter paths, harder (any size)"};
 
-		/*int choice = JOptionPane.showOptionDialog(null,
-				"What kind of maze would you like to play?\n" +
-						"Harder options may not have an exit!\n" +
-						"When choosing a maze of size > 40, wait a little after making the first " +
-						"step.\n The game needs to load", "Maze options",
-				JOptionPane.YES_NO_CANCEL_OPTION,
-				JOptionPane.QUESTION_MESSAGE,null,ops,null);
-
-		 */
         JOptionPane op = new JOptionPane(
                 "When choosing size > 40, wait a little after making the first step");
         op.setOptions(ops);
@@ -81,6 +73,17 @@ public class MazeGrid extends JFrame{
 		newgame.setFocusable(false);
         JMenu color = addColorChange();
         bar.add(color);
+        //Hint-solve using wall follower
+        JButton solve = new JButton("Hint");
+        solve.addActionListener(e->{
+        	JOptionPane.showMessageDialog(null, "This will " +
+					"color the area where the path could be, as well as most of the area where " +
+					"it actually is.\n Starting from the beginning, simply follow the blue areas.",
+					"Hint",JOptionPane.INFORMATION_MESSAGE);
+        	MazeSolver.wallFollowerToHint(grid, maze);
+		});
+		solve.setFocusable(false);
+		bar.add(solve);
 		setJMenuBar(bar);
 	}
     private JMenu addColorChange() {

@@ -28,6 +28,7 @@ public class MazeGenerator {
     //Creates an array of the top walls of all cells to create Blocks easier later (Block contains
     // 4 numbers representing the walls it has, e.g. in a 16-cell maze the first cell is
     //Block(1,5,10,6)
+    //So this returns a list [1,2,3,4,10,11,12,13,...] as those are all the top walls of each cell
     private static int[] createTopWallsForCells() {
         int counter = -1;
         int[] t = new int[size*size];
@@ -39,6 +40,7 @@ public class MazeGenerator {
     }
 
     //Creates an array of blocks where each contains the numbers of its walls
+    //This basically creates a grid so that each cell is a block with its associated walls
     public static Block[][] createListOfBlocks() {
         int[] t = createTopWallsForCells();
         cells = new Block[size][size];
@@ -267,8 +269,13 @@ public static ArrayList<Integer> prim() {
         size = 4;
         numWalls = 2*size*size+2*size;
         createWallsList();
-        Block[][] test = createListOfBlocks();
 
+        Block[][] test = createListOfBlocks();
+        for (Block[] w : test) {
+            for (Block k : w) {
+                //System.out.println(k);
+            }
+        }
         setUpForGen();
         //kruskalsPrep();
         //ArrayList<Integer> w = dfGeneration(test[0][0]);
