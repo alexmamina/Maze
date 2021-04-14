@@ -84,6 +84,16 @@ public class MazeGrid extends JFrame{
 		});
 		solve.setFocusable(false);
 		bar.add(solve);
+		JButton solve2 = new JButton("Solve");
+		solve2.addActionListener(e->{
+			JOptionPane.showMessageDialog(null, "This will" +
+							" show you the complete solution for this maze, after which you will " +
+							"only be able to start a new game.",
+					"Solution",JOptionPane.INFORMATION_MESSAGE);
+			MazeSolver.recursive(grid, maze);
+		});
+		solve2.setFocusable(false);
+		bar.add(solve2);
 		setJMenuBar(bar);
 	}
     private JMenu addColorChange() {

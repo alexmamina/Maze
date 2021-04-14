@@ -27,7 +27,6 @@ public class MazeSolver {
         int[] curr_coord = {y, x};
         int[] prev = null;
         visitedTimes[y][x]++;
-        System.out.println(y + " and "+x);
         //While we're not at the end
         while (x != l-1 || y != l-1) {
             //Get possible passages from current point
@@ -38,7 +37,6 @@ public class MazeSolver {
                 prev = curr_coord;
                 visitedTimes[y][x]++;
                 curr = maze[coords[0]][coords[1]];
-                System.out.println(y + " and " + x);
                 x = coords[1];
                 y = coords[0];
                 visitedTimes[y][x]++;
@@ -53,7 +51,6 @@ public class MazeSolver {
                     prev = curr_coord;
 
                     curr = maze[oneWay[0]][oneWay[1]];
-                    System.out.println(y + " and " + x);
                     x = oneWay[1];
                     y = oneWay[0];
                     visitedTimes[y][x]++;
@@ -63,7 +60,6 @@ public class MazeSolver {
                 } else {
                     prev = curr_coord;
                     curr = maze[anotherWay[0]][anotherWay[1]];
-                    System.out.println(y + " and " + x);
                     x = anotherWay[1];
                     y = anotherWay[0];
                     visitedTimes[y][x]++;
@@ -80,7 +76,6 @@ public class MazeSolver {
                     //Get the second (which will be to go right, straight, left)
                     prev = curr_coord;
                     curr = maze[passages.get(1)[0]][passages.get(1)[1]];
-                    System.out.println(y + " and " + x);
                     x = passages.get(1)[1];
                     y = passages.get(1)[0];
                     visitedTimes[y][x]++;
@@ -92,7 +87,6 @@ public class MazeSolver {
                         prev = curr_coord;
                         //Go to bottom
                         curr = maze[passages.get(1)[0]][passages.get(1)[1]];
-                        System.out.println(y + " and " + x);
                         x = passages.get(1)[1];
                         y = passages.get(1)[0];
                         visitedTimes[y][x]++;
@@ -103,7 +97,6 @@ public class MazeSolver {
                         prev = curr_coord;
                         //Go to bottom or right
                         curr = maze[passages.get(2)[0]][passages.get(2)[1]];
-                        System.out.println(y + " and " + x);
                         x = passages.get(2)[1];
                         y = passages.get(2)[0];
                         visitedTimes[y][x]++;
@@ -117,7 +110,6 @@ public class MazeSolver {
                         //No way right (last is bottom), go top or left.
                         prev = curr_coord;
                         curr = maze[passages.get(0)[0]][passages.get(0)[1]];
-                        System.out.println(y + " and " + x);
                         x = passages.get(0)[1];
                         y = passages.get(0)[0];
                         visitedTimes[y][x]++;
@@ -127,7 +119,6 @@ public class MazeSolver {
                         //Way right
                         prev = curr_coord;
                         curr = maze[lastPassage[0]][lastPassage[1]];
-                        System.out.println(y + " and " + x);
                         x = lastPassage[1];
                         y = lastPassage[0];
                         visitedTimes[y][x]++;
@@ -138,7 +129,6 @@ public class MazeSolver {
                     //From right. Can be  TLBR, LBR, TBR, TLR. Go first available
                     prev = curr_coord;
                     curr = maze[passages.get(0)[0]][passages.get(0)[1]];
-                    System.out.println(y + " and " + x);
                     x = passages.get(0)[1];
                     y = passages.get(0)[0];
                     visitedTimes[y][x]++;
@@ -153,17 +143,69 @@ public class MazeSolver {
         }
         for (int r = 0; r < l; r++) {
             for (int c = 0; c < l; c++) {
-                System.out.print(visitedTimes[r][c]);
                 if (visitedTimes[r][c] == 1) {
                     //Color where the path definitely is
                     grid[r][c].setBackground(Color.BLUE);
                     grid[0][0].requestFocus();
                 }
             }
-            System.out.println();
         }
 
     }
+
+
+    public static void recursive(JButton[][] grid, Block[][] maze) {
+        int len = maze.length;
+        boolean[][] visited = new boolean[len][len];
+        boolean[][] correct = new boolean[len][len];
+        //Init the array with zeros
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < len; j++) {
+                visited[i][j]= false;
+                correct[i][j] = false;
+            }
+        }
+        int x = 0;
+        int y = 0;
+        Block curr = maze[y][x];
+        System.out.println("Starting recursion");
+        if (recSolve(curr, y, x, maze, visited, correct)) {
+            for (int i = 0; i < maze.length; i++) {
+                for (int j = 0; j < maze.length; j++) {
+                    if (correct[i][j] || i == maze.length-1 && j == maze.length-1) {
+                        grid[i][j].setBackground(MazeGrid.path);
+                    }
+                }
+            }
+        }
+        System.out.println("Done with recursion");
+    }
+
+    private static boolean recSolve(Block curr, int y, int x, Block[][] maze, boolean[][] visited,
+                                 boolean[][] correct) {
+        if (visited[y][x]) return false;
+        if (y == maze.length-1 && x == maze.length-1) {
+            visited[y][x] = true;
+            return true;
+        }
+        visited[y][x] = true;
+        ArrayList<int[]> passages = curr.getPassage(maze.length, y, x);
+        if (passages.size() == 1 && x != 0 && y != 0) return false;
+        else {
+            for (int[] p : passages) {
+                if (!visited[p[0]][p[1]]) {
+                    curr = maze[p[0]][p[1]];
+                    if (recSolve(curr, p[0], p[1], maze, visited, correct)) {
+                        correct[y][x] = true;
+                        return true;
+                    }
+                }
+            }
+
+        }
+        return false;
+    }
+
 
     public static void main(String[] args) {
         wallFollowerToHint(MazeGrid.grid,MazeGrid.maze);
