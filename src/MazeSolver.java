@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MazeSolver {
 
@@ -137,18 +138,21 @@ public class MazeSolver {
 
 
             }
-            //Color all the area that the algorithm visited for a 'hint'
-            grid[y][x].setBackground(Color.LIGHT_GRAY);
+
 
         }
+        Random rand = new Random();
         for (int r = 0; r < l; r++) {
             for (int c = 0; c < l; c++) {
                 if (visitedTimes[r][c] == 1) {
-                    //Color where the path definitely is
-                    grid[r][c].setBackground(Color.BLUE);
-                    grid[0][0].requestFocus();
+                    if (rand.nextInt() % maze.length % 4 == 0) {
+                        //Color random cells on the path to the end
+                        grid[r][c].setBackground(new Color(250,150,255));
+                    }
                 }
+
             }
+
         }
 
     }
@@ -207,6 +211,72 @@ public class MazeSolver {
     }
 
 
+    /*
+    Just scan the Maze, and fill in each dead end, filling in the passage backwards
+    from the block until you reach a junction. That includes filling in passages that
+    become parts of dead ends once other dead ends are removed
+     */
+    public static void deadEnd(JButton[][] grid, Block[][] maze) {
+        ArrayList<Block> deadends = new ArrayList<>();
+        ArrayList<int[]> endindices = new ArrayList<>();
+        boolean[][] correct = new boolean[maze.length][maze.length];
+        //Get a list of dead ends (one passage, not start). Add to list. Also init correct
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < maze.length; j++) {
+                correct[i][j] = true;
+                Block b = maze[i][j];
+                ArrayList<int[]> passages = b.getPassage(maze.length, i, j);
+                //Start and end don't count as dead ends
+                if (passages.size() == 1 && !(i == 0 && j == 0) && !(i == maze.length-1
+                                                            && j == maze.length-1)) {
+                    deadends.add(b);
+                    endindices.add(new int[]{i, j});
+                }
+            }
+        }
+        //For each, fill in color until the first junction (>2 passages)
+        //AND if the junction leads to 2 or more dead ends, fill that in as well.
+        for (int k = 0; k < deadends.size(); k++) {
+            Block b = deadends.get(k);
+            int[] indices = endindices.get(k);
+            ArrayList<int[]> passages = b.getPassage(maze.length, indices[0], indices[1]);
+            int validPassages = 1;
+            while (validPassages < 2 && !(indices[0] == maze.length-1 && indices[1] == maze.length-1) &&
+                                                !(indices[0] == 0 && indices[1] == 0)) {
+                //fill in false path
+                correct[indices[0]][indices[1]] = false;
+                //get neighbour that's not visited
+                for (int[] p : passages) {
+                    //this checks that it's not going backwards, so only goes through 1 iter.
+                    if (correct[p[0]][p[1]]) {
+                        Block next = maze[p[0]][p[1]];
+                        indices = p;
+                        passages = next.getPassage(maze.length, indices[0], indices[1]);
+                        validPassages = passages.size();
+                        //if a passage leads to a dead path, decrease num of available passages
+                        for (int[] newp : passages) {
+                            if (!correct[newp[0]][newp[1]]) {
+                                validPassages--;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        //Color path
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < maze.length; j++) {
+                if (correct[i][j]) grid[i][j].setBackground(MazeGrid.path);
+            }
+        }
+    }
+
+
+    //A* without heuristics
+    public static void shortest(JButton grid, Block[][] maze) {
+
+    }
     public static void main(String[] args) {
         wallFollowerToHint(MazeGrid.grid,MazeGrid.maze);
     }

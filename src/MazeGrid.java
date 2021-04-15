@@ -77,8 +77,8 @@ public class MazeGrid extends JFrame{
         JButton solve = new JButton("Hint");
         solve.addActionListener(e->{
         	JOptionPane.showMessageDialog(null, "This will " +
-					"color the area where the path could be, as well as most of the area where " +
-					"it actually is.\n Starting from the beginning, simply follow the blue areas.",
+					"show some cells on the correct path. \n To reach the end, follow all of " +
+							"those cells.",
 					"Hint",JOptionPane.INFORMATION_MESSAGE);
         	MazeSolver.wallFollowerToHint(grid, maze);
 		});
@@ -87,10 +87,12 @@ public class MazeGrid extends JFrame{
 		JButton solve2 = new JButton("Solve");
 		solve2.addActionListener(e->{
 			JOptionPane.showMessageDialog(null, "This will" +
-							" show you the complete solution for this maze, after which you will " +
+							" show you the complete solution for this maze, \nafter which you " +
+							"will " +
 							"only be able to start a new game.",
 					"Solution",JOptionPane.INFORMATION_MESSAGE);
-			MazeSolver.recursive(grid, maze);
+			//MazeSolver.recursive(grid, maze);
+			MazeSolver.deadEnd(grid, maze);
 		});
 		solve2.setFocusable(false);
 		bar.add(solve2);
@@ -102,14 +104,14 @@ public class MazeGrid extends JFrame{
         JMenuItem opt2 = new JMenuItem("Blue");
         JMenuItem opt3 = new JMenuItem("Green");
         JMenuItem opt4 = new JMenuItem("Purple & Yellow");
-
         opt1.addActionListener(e->{
 
             for (int i = 0; i < grid.length; i++) {
                 for (int j = 0; j < grid.length; j++) {
                     if (grid[i][j].getBackground().equals(back))
                         grid[i][j].setBackground(Color.WHITE);
-                    else grid[i][j].setBackground(new Color(58,76,148));
+                    else if(grid[i][j].getBackground().equals(path))
+                    	grid[i][j].setBackground(new Color(58,76,148));
                 }
             }
             path = new Color(58,76,148);
@@ -121,7 +123,8 @@ public class MazeGrid extends JFrame{
                 for (int j = 0; j < grid.length; j++) {
                     if (grid[i][j].getBackground().equals(back))
                         grid[i][j].setBackground(new Color(200,240,255));
-                    else grid[i][j].setBackground(new Color(148,185,225));
+					else if(grid[i][j].getBackground().equals(path))
+						grid[i][j].setBackground(new Color(148,185,225));
                 }
             }
             path = new Color(148,185,225);
@@ -133,7 +136,8 @@ public class MazeGrid extends JFrame{
                 for (int j = 0; j < grid.length; j++) {
                     if (grid[i][j].getBackground().equals(back))
                         grid[i][j].setBackground(new Color(199,255,205));
-                    else grid[i][j].setBackground(new Color(51,165,82));
+					else if(grid[i][j].getBackground().equals(path))
+						grid[i][j].setBackground(new Color(51,165,82));
                 }
             }
             back = new Color(199,255,205);
@@ -145,7 +149,8 @@ public class MazeGrid extends JFrame{
                 for (int j = 0; j < grid.length; j++) {
                     if (grid[i][j].getBackground().equals(back))
                         grid[i][j].setBackground(new Color(251, 255, 190));
-                    else grid[i][j].setBackground(new Color(174, 142, 255));
+					else if(grid[i][j].getBackground().equals(path))
+						grid[i][j].setBackground(new Color(174,142,255));
                 }
             }
             back = new Color(251, 255, 190);
@@ -214,7 +219,7 @@ public class MazeGrid extends JFrame{
 				if (i == MazeGenerator.size - 1 && j == MazeGenerator.size - 1) { b.setText("!!!");
 				b.setForeground(Color.black);
 				}
-	
+
 				ArrowAction lol = new ArrowAction();
 				if (ArrowAction.top(b) > 0 && ArrowAction.left(b) > 0 &&
 						ArrowAction.bottom(b) > 0 && ArrowAction.right(b) > 0) {
