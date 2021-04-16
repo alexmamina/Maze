@@ -55,7 +55,7 @@ public class MazeGrid extends JFrame{
 		newgame.addActionListener(e->{
 			MazeGrid newgrid = new MazeGrid();
 			newgrid.setVisible(true);
-			setVisible(false);
+			dispose();
 		});
 		bar.add(newgame);
 		JButton clear = new JButton("Clear");
@@ -84,7 +84,7 @@ public class MazeGrid extends JFrame{
 		});
 		solve.setFocusable(false);
 		bar.add(solve);
-		JButton solve2 = new JButton("Solve");
+		JButton solve2 = new JButton("Solve bfs");
 		solve2.addActionListener(e->{
 			JOptionPane.showMessageDialog(null, "This will" +
 							" show you the complete solution for this maze, \nafter which you " +
@@ -92,10 +92,37 @@ public class MazeGrid extends JFrame{
 							"only be able to start a new game.",
 					"Solution",JOptionPane.INFORMATION_MESSAGE);
 			//MazeSolver.recursive(grid, maze);
-			MazeSolver.deadEnd(grid, maze);
+			//MazeSolver.deadEnd(grid, maze);
+			long start = System.nanoTime();
+			MazeSolver.shortest(grid, maze);
+			System.out.println("BFS done. "+ (System.nanoTime()-start)/1000);
 		});
 		solve2.setFocusable(false);
 		bar.add(solve2);
+		JButton solve3 = new JButton("Solve end");
+		solve3.addActionListener(e->{
+			//MazeSolver.recursive(grid, maze);
+			long start = System.nanoTime();
+
+			MazeSolver.deadEnd(grid, maze);
+			System.out.println("DEF done. "+ (System.nanoTime()-start)/1000);
+
+			//MazeSolver.shortest(grid, maze);
+		});
+		solve3.setFocusable(false);
+		bar.add(solve3);
+		JButton solve4 = new JButton("Solve rec");
+		solve4.addActionListener(e->{
+			long start = System.nanoTime();
+
+			MazeSolver.recursive(grid, maze);
+			System.out.println("Rec done. "+ (System.nanoTime()-start)/1000);
+
+			//MazeSolver.deadEnd(grid, maze);
+			//MazeSolver.shortest(grid, maze);
+		});
+		solve4.setFocusable(false);
+		bar.add(solve4);
 		setJMenuBar(bar);
 	}
     private JMenu addColorChange() {
@@ -203,7 +230,7 @@ public class MazeGrid extends JFrame{
 			for (int j = 0; j < MazeGenerator.size; j++) {
 				Block c = maze[i][j];
 				JButton b = new JButton();
-				
+
 				b.setBorder(BorderFactory.createMatteBorder(c.getT()-1, c.getL()-1, c.getB()-1, c.getR()-1, Color.BLACK));
 				
 				if (i == 0 && j == 0) { 

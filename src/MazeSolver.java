@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class MazeSolver {
 
@@ -156,7 +156,7 @@ public class MazeSolver {
         }
 
     }
-
+//TODO add "waiting for soln" while searching
 
     public static void recursive(JButton[][] grid, Block[][] maze) {
         int len = maze.length;
@@ -273,10 +273,72 @@ public class MazeSolver {
     }
 
 
-    //A* without heuristics
-    public static void shortest(JButton grid, Block[][] maze) {
-
+    //Breadth-first search
+    /*
+    procedure BFS(G, root) is
+ 2      let Q be a queue
+ 3      label root as discovered
+ 4      Q.enqueue(root)
+ 5      while Q is not empty do
+ 6          v := Q.dequeue()
+ 7          if v is the goal then
+ 8              return v
+ 9          for all edges from v to w in G.adjacentEdges(v) do
+10              if w is not labeled as discovered then
+11                  label w as discovered
+12                  Q.enqueue(w)
+     */
+    public static void shortest(JButton[][] grid, Block[][] maze) {
+        Queue<int[]> queue = new LinkedBlockingQueue<>();
+        boolean[][] visited = new boolean[maze.length][maze.length];
+        //Key is child, value is parent indices
+        HashMap<int[], int[]> parents = new HashMap<>();
+        int[] indices = new int[]{0,0};
+        int[] end = new int[]{maze.length, maze.length};
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < maze.length; j++) {
+                visited[i][j] = false;
+            }
+        }
+        visited[indices[0]][indices[1]] = true;
+        queue.add(indices);
+        while (!queue.isEmpty()) {
+            int[] curr = queue.poll();
+            Block b = maze[curr[0]][curr[1]];
+            if (curr[0] == maze.length-1 && curr[1] == maze.length-1) {
+                getPath(curr, parents, grid);
+            }
+            ArrayList<int[]> passages = b.getPassage(maze.length, curr[0], curr[1]);
+            for (int[] p : passages) {
+                if (!visited[p[0]][p[1]]) {
+                    parents.put(p, curr);
+                    visited[p[0]][p[1]] = true;
+                    queue.add(p);
+                }
+            }
+        }
     }
+    //Get parents of children and add to the final path, reconstructing backwards
+    private static void getPath(int[] curr, HashMap<int[],int[]> parents, JButton[][] grid) {
+        ArrayList<int[]> path = new ArrayList<>();
+        path.add(curr);
+        int[] parent = new int[2];
+        while (!(curr[0] == 0 && curr[1] == 0)) {
+            for (int[] k : parents.keySet()) {
+                if (k[0] == curr[0] && k[1] == curr[1]) {
+                    parent = parents.get(k);
+                    parents.remove(k);
+                    break;
+                }
+            }
+            path.add(parent);
+            curr = parent;
+        }
+        for (int[] c : path) {
+            grid[c[0]][c[1]].setBackground(MazeGrid.path);
+        }
+    }
+
     public static void main(String[] args) {
         wallFollowerToHint(MazeGrid.grid,MazeGrid.maze);
     }
