@@ -74,16 +74,33 @@ public class MazeGrid extends JFrame{
         JMenu color = addColorChange();
         bar.add(color);
         //Hint-solve using wall follower
-        JButton solve = new JButton("Hint");
-        solve.addActionListener(e->{
+        JButton hint = new JButton("Hint");
+        hint.addActionListener(e->{
         	JOptionPane.showMessageDialog(null, "This will " +
 					"show some cells on the correct path. \n To reach the end, follow all of " +
 							"those cells.",
 					"Hint",JOptionPane.INFORMATION_MESSAGE);
         	MazeSolver.wallFollowerToHint(grid, maze);
 		});
+		hint.setFocusable(false);
+		bar.add(hint);
+		JButton solve = new JButton("Solve");
+		solve.addActionListener(e->{
+			JOptionPane.showMessageDialog(null, "This will" +
+							" show you the complete solution for this maze, \nafter which you " +
+							"will " +
+							"only be able to start a new game.",
+					"Solution",JOptionPane.INFORMATION_MESSAGE);
+			long start = System.nanoTime();
+			MazeSolver.recursive(grid, maze);
+			System.out.println("Rec done. "+ (System.nanoTime()-start)/1000);
+
+			//MazeSolver.deadEnd(grid, maze);
+			//MazeSolver.shortest(grid, maze);
+		});
 		solve.setFocusable(false);
 		bar.add(solve);
+		/* THESE ARE LONGER. (DEF ~4-10; BFS > 20)*1000
 		JButton solve2 = new JButton("Solve bfs");
 		solve2.addActionListener(e->{
 			JOptionPane.showMessageDialog(null, "This will" +
@@ -111,18 +128,7 @@ public class MazeGrid extends JFrame{
 		});
 		solve3.setFocusable(false);
 		bar.add(solve3);
-		JButton solve4 = new JButton("Solve rec");
-		solve4.addActionListener(e->{
-			long start = System.nanoTime();
-
-			MazeSolver.recursive(grid, maze);
-			System.out.println("Rec done. "+ (System.nanoTime()-start)/1000);
-
-			//MazeSolver.deadEnd(grid, maze);
-			//MazeSolver.shortest(grid, maze);
-		});
-		solve4.setFocusable(false);
-		bar.add(solve4);
+		 */
 		setJMenuBar(bar);
 	}
     private JMenu addColorChange() {
