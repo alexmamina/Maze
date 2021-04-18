@@ -9,135 +9,103 @@ import javax.swing.JOptionPane;
 
 public class ArrowAction implements  KeyListener {
 
-	public static int top(JButton b) {
-		return b.getBorder().getBorderInsets(b).top;
-	}
-	public static int left(JButton b) {
-		return b.getBorder().getBorderInsets(b).left;
-	}
-	public static int bottom(JButton b) {
-		return b.getBorder().getBorderInsets(b).bottom;
-	}
-	public static int right(JButton b) {
-		return b.getBorder().getBorderInsets(b).right;
-	}
-
-
 	@Override
 	public void keyPressed(KeyEvent e) {
 
-		for (int i = 0; i < MazeGrid.grid.length; i++) {
-			for (int j = 0; j < MazeGrid.grid.length; j++) {
-				if (MazeGrid.grid[i][j].isFocusOwner()) {
-
-					switch (e.getKeyCode()) {
-						case (KeyEvent.VK_RIGHT) :
-							if (j<MazeGrid.grid.length-1 && left(MazeGrid.grid[i][j+1]) == 0
-							&& right(MazeGrid.grid[i][j]) == 0
-							&& !MazeGrid.grid[i][j+1].getBackground().equals(MazeGrid.path)) {
-							
-							MazeGrid.grid[i][j+1].setBackground(MazeGrid.path);
-							MazeGrid.grid[i][j+1].requestFocus();
-							
-							checkEnd(MazeGrid.grid[i][j+1]);
-							} else if (j<MazeGrid.grid.length-1 && left(MazeGrid.grid[i][j+1]) == 0
-							&& right(MazeGrid.grid[i][j]) == 0
-							&& MazeGrid.grid[i][j+1].getBackground().equals(MazeGrid.path)) {
-								
-								MazeGrid.grid[i][j].setBackground(MazeGrid.back);
-								MazeGrid.grid[i][j+1].requestFocus();
-							}
-						
-						break;
-						
-						case (KeyEvent.VK_LEFT) :
-							if (j > 0 && left(MazeGrid.grid[i][j]) == 0
-									&& right(MazeGrid.grid[i][j-1]) == 0
-									&& !MazeGrid.grid[i][j-1].getBackground().equals(MazeGrid.path)) {
-								
-							 MazeGrid.grid[i][j-1].setBackground(MazeGrid.path);
-							
-							 MazeGrid.grid[i][j-1].requestFocus();
-							 
-							 checkEnd(MazeGrid.grid[i][j-1]);
-							} else if (j > 0 && left(MazeGrid.grid[i][j]) == 0
-									&& right(MazeGrid.grid[i][j-1]) == 0
-									&& MazeGrid.grid[i][j-1].getBackground().equals(MazeGrid.path)) {
-								
-								 MazeGrid.grid[i][j].setBackground(MazeGrid.back);
-								 MazeGrid.grid[i][j-1].requestFocus();
-							}
-						break;
-						case (KeyEvent.VK_UP) :
-							if (i>0 && top(MazeGrid.grid[i][j]) == 0
-									&& bottom(MazeGrid.grid[i-1][j]) == 0
-									&& !MazeGrid.grid[i-1][j].getBackground().equals(MazeGrid.path)) {
-							 MazeGrid.grid[i-1][j].setBackground(MazeGrid.path);
-							 
-							MazeGrid.grid[i-1][j].requestFocus();
-							checkEnd(MazeGrid.grid[i-1][j]);
-							} else if (i>0 && top(MazeGrid.grid[i][j]) == 0
-									&& bottom(MazeGrid.grid[i-1][j]) == 0
-									&& MazeGrid.grid[i-1][j].getBackground().equals(MazeGrid.path)) {
-								MazeGrid.grid[i][j].setBackground(MazeGrid.back);
-								 MazeGrid.grid[i-1][j].requestFocus();
-							}
-						break;
-						case (KeyEvent.VK_DOWN) :
-							if (i< MazeGrid.grid.length-1 && top(MazeGrid.grid[i+1][j]) == 0
-									&& bottom(MazeGrid.grid[i][j]) == 0
-									&& !MazeGrid.grid[i+1][j].getBackground().equals(MazeGrid.path)) {
-							MazeGrid.grid[i+1][j].setBackground(MazeGrid.path);
-							 MazeGrid.grid[i+1][j].requestFocus();
-							 checkEnd(MazeGrid.grid[i+1][j]);
-							} else if (i< MazeGrid.grid.length-1 && top(MazeGrid.grid[i+1][j]) == 0
-									&& bottom(MazeGrid.grid[i][j]) == 0
-									&& MazeGrid.grid[i+1][j].getBackground().equals(MazeGrid.path)) {
-								MazeGrid.grid[i][j].setBackground(MazeGrid.back);
-								 MazeGrid.grid[i+1][j].requestFocus();
-							}
-						break;
-					}
-					
-				}
-			}
+		JButton b = (JButton) e.getSource();
+		String text = b.getText();
+		String[] coords = text.split(" ");
+		int i, j;
+		if (!text.equals("!!!")) {
+			i = Integer.parseInt(coords[0]);
+			j = Integer.parseInt(coords[1]);
+		} else {
+			i = MazeGrid.grid.length-1;
+			j = MazeGrid.grid.length-1;
 		}
+		Block curr = MazeGrid.maze[i][j];
+		//Check in what direction it's possible to go
+		boolean[] passages = curr.whatPassagesExist(MazeGrid.grid.length, i, j);
+
+		switch (e.getKeyCode()) {
+			case (KeyEvent.VK_RIGHT) :
+				if (passages[3] && !MazeGrid.grid[i][j+1].getBackground().equals(MazeGrid.path)) {
+					//If can go right and the right neighbour is not part of the path, color it
+					MazeGrid.grid[i][j+1].setBackground(MazeGrid.path);
+					MazeGrid.grid[i][j+1].setForeground(MazeGrid.path);
+					MazeGrid.grid[i][j+1].requestFocus();
+					checkEnd(MazeGrid.grid[i][j+1]);
+
+				} else if (passages[3] && MazeGrid.grid[i][j+1].getBackground().equals(MazeGrid.path)) {
+					//Can go right, and right neighbour is already part of path (e.g. going
+					// backwards, need to clear the color)
+					MazeGrid.grid[i][j].setBackground(MazeGrid.back);
+					MazeGrid.grid[i][j].setForeground(MazeGrid.back);
+					MazeGrid.grid[i][j+1].requestFocus();
+				}
+			break;
+						
+			case (KeyEvent.VK_LEFT) :
+				if (passages[1] && !MazeGrid.grid[i][j-1].getBackground().equals(MazeGrid.path)) {
+					//Going left and forwards, color as path
+					MazeGrid.grid[i][j-1].setBackground(MazeGrid.path);
+					MazeGrid.grid[i][j-1].setForeground(MazeGrid.path);
+					MazeGrid.grid[i][j-1].requestFocus();
+					checkEnd(MazeGrid.grid[i][j-1]);
+				} else if (passages[1] && MazeGrid.grid[i][j-1].getBackground().equals(MazeGrid.path)) {
+					//Left and backwards, color back to 'unvisited'
+					MazeGrid.grid[i][j].setBackground(MazeGrid.back);
+					MazeGrid.grid[i][j].setForeground(MazeGrid.back);
+					MazeGrid.grid[i][j-1].requestFocus();
+				}
+			break;
+
+			case (KeyEvent.VK_UP) :
+				if (passages[0] && !MazeGrid.grid[i-1][j].getBackground().equals(MazeGrid.path)) {
+					//Up and forwards
+					MazeGrid.grid[i-1][j].setBackground(MazeGrid.path);
+					MazeGrid.grid[i-1][j].setForeground(MazeGrid.path);
+					MazeGrid.grid[i-1][j].requestFocus();
+					checkEnd(MazeGrid.grid[i-1][j]);
+				} else if (passages[0] && MazeGrid.grid[i-1][j].getBackground().equals(MazeGrid.path)) {
+					//Up and backwards
+					MazeGrid.grid[i][j].setBackground(MazeGrid.back);
+					MazeGrid.grid[i][j].setForeground(MazeGrid.back);
+					MazeGrid.grid[i-1][j].requestFocus();
+				}
+			break;
+			case (KeyEvent.VK_DOWN) :
+				if (passages[2] && !MazeGrid.grid[i+1][j].getBackground().equals(MazeGrid.path)) {
+					//Down and forwards
+					MazeGrid.grid[i+1][j].setBackground(MazeGrid.path);
+					MazeGrid.grid[i+1][j].setForeground(MazeGrid.path);
+					MazeGrid.grid[i+1][j].requestFocus();
+					checkEnd(MazeGrid.grid[i+1][j]);
+				} else if (passages[2] && MazeGrid.grid[i+1][j].getBackground().equals(MazeGrid.path)) {
+					//Down and backwards
+					MazeGrid.grid[i][j].setBackground(MazeGrid.back);
+					MazeGrid.grid[i][j].setForeground(MazeGrid.back);
+					MazeGrid.grid[i+1][j].requestFocus();
+				}
+			break;
+		}
+
 		
 	}
 
 	private void checkEnd(JButton a) {
-
-
 		if (a.getText().equals("!!!")) {
-			JOptionPane.showMessageDialog(null, "Congratulations, you win! \nIf you want to start" +
+			JOptionPane.showMessageDialog(null,
+					"Congratulations, you win! \nIf you want to start" +
 					" a" +
 					" new game, press the button in the top left");
-			/*for (int l = 0; l < MazeGrid.grid.length; l++) {
-				for (int m = 0; m < MazeGrid.grid.length; m++) {
-					
-					MazeGrid.grid[l][m].setBackground(MazeGrid.back);
-					
-					MazeGrid.grid[0][0].requestFocus();
-					MazeGrid.grid[0][0].setBackground(MazeGrid.path);
-					
-				}
-			} */
 		}
-		
 	}
 	
 	
 	
 	@Override
-	public void keyTyped(KeyEvent e) {
-		
-		
-	}
+	public void keyTyped(KeyEvent e) {}
 	@Override
-	public void keyReleased(KeyEvent e) {
-	
-		
-	}
-
-
+	public void keyReleased(KeyEvent e) {}
 }

@@ -23,9 +23,7 @@ public class Block {
 	
 
 	public String toString() {
-
 		return getT()+" "+getL()+" "+getB()+" "+getR();
-		
 	}
 
 	public static Block[] getTwoNeighbours(int wall, Block[][] cells) {
@@ -76,27 +74,28 @@ public class Block {
 	//with the current block
 	public  ArrayList<int[]> getPassage(int len, int i, int j) {
 		ArrayList<int[]> result = new ArrayList<>();
+		boolean[] passages = this.whatPassagesExist(len, i, j);
 		//cells is already 2 or 1
-		int[] r = new int[2];
-		if (this.getT() == 1 && i > 0) {
+		int[] r;
+		if (passages[0]) {
 			r = new int[2];
 			r[0] = i-1;
 			r[1] = j;
 			result.add(r);
 		}
-		if (this.getL() == 1 && j > 0) {
+		if (passages[1]) {
 			r = new int[2];
 			r[0] = i;
 			r[1] = j-1;
 			result.add(r);
 		}
-		if (this.getB() == 1 && i < len-1) {
+		if (passages[2]) {
 			r = new int[2];
 			r[0] = i+1;
 			r[1] = j;
 			result.add(r);
 		}
-		if (this.getR() == 1 && j < len-1) {
+		if (passages[3]) {
 			r = new int[2];
 			r[0] = i;
 			r[1] = j+1;
@@ -104,6 +103,15 @@ public class Block {
 		}
 
 		return result;
+	}
+
+	public boolean[] whatPassagesExist(int len, int i, int j) {
+		boolean[] topLeftBottomRight = new boolean[4];
+		topLeftBottomRight[0] = this.getT() == 1 && i > 0;
+		topLeftBottomRight[1] = this.getL() == 1 && j > 0;
+		topLeftBottomRight[2] = this.getB() == 1 && i < len - 1;
+		topLeftBottomRight[3] = this.getR() == 1 && j < len - 1;
+		return topLeftBottomRight;
 	}
 
 	public int[] getAllWalls() {
@@ -115,7 +123,7 @@ public class Block {
 		return ws;
 	}
 
-	public boolean equals(Block b) {
+	private boolean equals(Block b) {
 		return this.t == b.getT() && this.l == b.getL() && this.b == b.getB() && this.r == b.getR();
 	}
 
@@ -146,7 +154,7 @@ public class Block {
 		return cells;
 	}
 
-	int[] values = createTable();
+	private int[] values = createTable();
 
 
 	public Block(int k) {
@@ -157,7 +165,7 @@ public class Block {
 		r = a % 10;
 	}
 
-	public int conversion(int n) {
+	private int conversion(int n) {
 		return values[n];
 	}
 }

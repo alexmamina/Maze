@@ -63,9 +63,12 @@ public class MazeGrid extends JFrame{
 			for (int i = 0; i < grid.length; i++) {
 				for (int j = 0; j < grid.length; j++) {
 					grid[i][j].setBackground(back);
+					grid[i][j].setForeground(back);
+
 				}
 			}
 			grid[0][0].setBackground(path);
+			grid[0][0].setForeground(path);
 			grid[0][0].requestFocus();
 		});
 		clear.setFocusable(false);
@@ -141,11 +144,16 @@ public class MazeGrid extends JFrame{
 
             for (int i = 0; i < grid.length; i++) {
                 for (int j = 0; j < grid.length; j++) {
-                    if (grid[i][j].getBackground().equals(back))
+                    if (grid[i][j].getBackground().equals(back)) {
                         grid[i][j].setBackground(Color.WHITE);
-                    else if(grid[i][j].getBackground().equals(path))
-                    	grid[i][j].setBackground(new Color(58,76,148));
-                }
+						grid[i][j].setForeground(Color.white);
+					}
+                    else if(grid[i][j].getBackground().equals(path)) {
+						grid[i][j].setBackground(new Color(58, 76, 148));
+						grid[i][j].setForeground(new Color(58, 76, 148));
+					}
+
+				}
             }
             path = new Color(58,76,148);
             back = Color.white;
@@ -154,10 +162,16 @@ public class MazeGrid extends JFrame{
         opt2.addActionListener(e->{
             for (int i = 0; i < grid.length; i++) {
                 for (int j = 0; j < grid.length; j++) {
-                    if (grid[i][j].getBackground().equals(back))
-                        grid[i][j].setBackground(new Color(200,240,255));
-					else if(grid[i][j].getBackground().equals(path))
-						grid[i][j].setBackground(new Color(148,185,225));
+                    if (grid[i][j].getBackground().equals(back)) {
+						grid[i][j].setBackground(new Color(200, 240, 255));
+						grid[i][j].setForeground(new Color(200, 240, 255));
+
+					}
+					else if(grid[i][j].getBackground().equals(path)) {
+						grid[i][j].setBackground(new Color(148, 185, 225));
+						grid[i][j].setForeground(new Color(148, 185, 225));
+
+					}
                 }
             }
             path = new Color(148,185,225);
@@ -167,10 +181,16 @@ public class MazeGrid extends JFrame{
         opt3.addActionListener(e->{
             for (int i = 0; i < grid.length; i++) {
                 for (int j = 0; j < grid.length; j++) {
-                    if (grid[i][j].getBackground().equals(back))
-                        grid[i][j].setBackground(new Color(199,255,205));
-					else if(grid[i][j].getBackground().equals(path))
-						grid[i][j].setBackground(new Color(51,165,82));
+                    if (grid[i][j].getBackground().equals(back)) {
+						grid[i][j].setBackground(new Color(199, 255, 205));
+						grid[i][j].setForeground(new Color(199, 255, 205));
+
+					}
+					else if(grid[i][j].getBackground().equals(path)) {
+						grid[i][j].setBackground(new Color(51, 165, 82));
+						grid[i][j].setForeground(new Color(51, 165, 82));
+
+					}
                 }
             }
             back = new Color(199,255,205);
@@ -180,10 +200,17 @@ public class MazeGrid extends JFrame{
         opt4.addActionListener(e->{
             for (int i = 0; i < grid.length; i++) {
                 for (int j = 0; j < grid.length; j++) {
-                    if (grid[i][j].getBackground().equals(back))
-                        grid[i][j].setBackground(new Color(251, 255, 190));
-					else if(grid[i][j].getBackground().equals(path))
-						grid[i][j].setBackground(new Color(174,142,255));
+                    if (grid[i][j].getBackground().equals(back)) {
+						grid[i][j].setBackground(new Color(251, 255, 190));
+						grid[i][j].setForeground(new Color(251, 255, 190));
+
+
+					}
+					else if(grid[i][j].getBackground().equals(path)) {
+						grid[i][j].setBackground(new Color(174, 142, 255));
+						grid[i][j].setForeground(new Color(174, 142, 255));
+
+					}
                 }
             }
             back = new Color(251, 255, 190);
@@ -236,62 +263,25 @@ public class MazeGrid extends JFrame{
 			for (int j = 0; j < MazeGenerator.size; j++) {
 				Block c = maze[i][j];
 				JButton b = new JButton();
-
-				b.setBorder(BorderFactory.createMatteBorder(c.getT()-1, c.getL()-1, c.getB()-1, c.getR()-1, Color.BLACK));
+				b.setText(i+" "+j);
+				b.setBorder(BorderFactory.createMatteBorder(
+						c.getT()-1, c.getL()-1, c.getB()-1, c.getR()-1, Color.BLACK));
 				
 				if (i == 0 && j == 0) { 
 					b.setBackground(path);
-					
+					b.setForeground(path);
 				}
 				else {
 					b.setBackground(back);
-					
-					
+					b.setForeground(back);
 				}
 				b.setOpaque(true);
-				if (i == MazeGenerator.size - 1 && j == MazeGenerator.size - 1) { b.setText("!!!");
-				b.setForeground(Color.black);
+				if (i == MazeGenerator.size - 1 && j == MazeGenerator.size - 1) {
+					b.setText("!!!");
+					b.setForeground(Color.black);
 				}
 
 				ArrowAction lol = new ArrowAction();
-				if (ArrowAction.top(b) > 0 && ArrowAction.left(b) > 0 &&
-						ArrowAction.bottom(b) > 0 && ArrowAction.right(b) > 0) {
-					b.addMouseListener(new MouseListener() {
-						
-						@Override
-						public void mouseReleased(MouseEvent e) {
-							
-							
-						}
-						
-						@Override
-						public void mousePressed(MouseEvent e) {
-							
-							
-						}
-						
-						@Override
-						public void mouseExited(MouseEvent e) {
-							
-							
-						}
-						
-						@Override
-						public void mouseEntered(MouseEvent e) {
-							
-							
-						}
-						
-						@Override
-						public void mouseClicked(MouseEvent e) {
-							
-							if (e.getClickCount() == 2) {
-								JOptionPane.showMessageDialog(null, "You have found the secret chamber!");
-							}
-						}
-					});
-				}
-				
 				b.addKeyListener(lol);
 		
 	

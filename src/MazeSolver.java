@@ -14,6 +14,7 @@ public class MazeSolver {
     following those cells visited once
      */
     public static void wallFollowerToHint(JButton[][] grid, Block[][] maze)  {
+        //TODO look at this with new whatpassagesexist fn
         int l = maze.length;
         int[][] visitedTimes = new int[l][l];
         //Init the array with zeros
@@ -148,6 +149,8 @@ public class MazeSolver {
                     if (rand.nextInt() % maze.length % 4 == 0) {
                         //Color random cells on the path to the end
                         grid[r][c].setBackground(new Color(250,150,255));
+                        grid[r][c].setForeground(new Color(250,150,255));
+
                     }
                 }
 
@@ -178,6 +181,8 @@ public class MazeSolver {
                 for (int j = 0; j < maze.length; j++) {
                     if (correct[i][j] || i == maze.length-1 && j == maze.length-1) {
                         grid[i][j].setBackground(MazeGrid.path);
+                        grid[i][j].setForeground(MazeGrid.path);
+
                     }
                 }
             }
@@ -267,7 +272,11 @@ public class MazeSolver {
         //Color path
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < maze.length; j++) {
-                if (correct[i][j]) grid[i][j].setBackground(MazeGrid.path);
+                if (correct[i][j]) {
+                    grid[i][j].setBackground(MazeGrid.path);
+                    grid[i][j].setForeground(MazeGrid.path);
+
+                }
             }
         }
     }
@@ -336,10 +345,9 @@ public class MazeSolver {
         }
         for (int[] c : path) {
             grid[c[0]][c[1]].setBackground(MazeGrid.path);
+            grid[c[0]][c[1]].setForeground(MazeGrid.path);
+
         }
     }
 
-    public static void main(String[] args) {
-        wallFollowerToHint(MazeGrid.grid,MazeGrid.maze);
-    }
 }
