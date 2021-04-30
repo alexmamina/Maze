@@ -5,9 +5,9 @@ public class MazeGenerator {
 
     public static int size;
     public static int numWalls;
-    public static int[] walls;
+    private static int[] walls;
     public static Block[][] cells;
-    public static Block[] listofcells;
+    private static Block[] listofcells;
     //Creates a randomised list of walls (represented by numbers, counted from top left to top
     // right, then vertical walls, then horizontal etc). Starts from 1 and ends with the last wall
     public static int[] createWallsList() {
@@ -139,7 +139,7 @@ public class MazeGenerator {
             4. Mark the chosen cell as visited and push it to the stack */
 
 
-   public static ArrayList<Integer> iterative() {
+    public static ArrayList<Integer> iterative() {
        Stack stack = new Stack();
        Block init = cells[0][0];
        visited.replace(init, false, true);
@@ -165,70 +165,70 @@ public class MazeGenerator {
    }
 //------------------------------------ITERATIVE END------------------------------------------------
 
-/*---------------------RANDOMIZED KRUSKAL'S ALGORITHM----------------------------------------------
-    1. Create a list of all walls, and create a set for each cell, containing just that one cell.
-    2. For each wall, in some random order:
-        1. If the cells divided by this wall belong to distinct sets:
-            1. Remove the current wall.
-            2. Join the sets of the formerly divided cells.
- */
-private static ArrayList<HashSet<Block>> sets = new ArrayList<>();
+    /*---------------------RANDOMIZED KRUSKAL'S ALGORITHM----------------------------------------------
+        1. Create a list of all walls, and create a set for each cell, containing just that one cell.
+        2. For each wall, in some random order:
+            1. If the cells divided by this wall belong to distinct sets:
+                1. Remove the current wall.
+                2. Join the sets of the formerly divided cells.
+     */
+    private static ArrayList<HashSet<Block>> sets = new ArrayList<>();
 
-//Creates a list of sets, each containing one cell
-public static void kruskalsPrep() {
-    for (int r = 0; r < size; r++) {
-        for (int c = 0; c < size; c++) {
-            HashSet<Block> set = new HashSet<>();
-            set.add(cells[r][c]);
-            sets.add(set);
-        }
-    }
-    remWalls = toAList(walls);
-}
-
-public static ArrayList<Integer> kruskal() {
-    for (int w : walls) {
-        ArrayList<HashSet<Block>> neighbSets = new ArrayList<>();
-        Block[] neighbours = Block.getTwoNeighbours(w, cells);
-        //If it's a border cell, skip to next wall
-        if (neighbours[1] == null) continue;
-        boolean distinct = true;
-        for (HashSet<Block> s : sets) {
-            if (s.contains(neighbours[0]) && s.contains(neighbours[1])) {
-                distinct = false;
-                break;
-            } else if (s.contains(neighbours[0]) || s.contains(neighbours[1])) {
-                //Adds sets where those neighbouring blocks are, to combine them together later
-                neighbSets.add(s);
+    //Creates a list of sets, each containing one cell
+    public static void kruskalsPrep() {
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+                HashSet<Block> set = new HashSet<>();
+                set.add(cells[r][c]);
+                sets.add(set);
             }
         }
-        if (distinct) {
-            remWalls.remove((Integer) w);
-            //Combine the neighbouring sets into one (union)
-            HashSet<Block> union = new HashSet<>();
-            union.addAll(neighbSets.get(0));
-            union.addAll(neighbSets.get(1));
-            sets.add(union);
-            //Remove the separate occurences of those sets as they have been unionized
-            sets.removeAll(neighbSets);
-        }
+        remWalls = toAList(walls);
     }
-    return remWalls;
-}
-//------------------------------------KRUSKAL'S END------------------------------------------------
 
-/*-----------------------RANDOMIZED PRIM'S ALGORITHM-----------------------------------------------
-    1. Start with a grid full of walls.
-    2. Pick a cell, mark it as part of the maze. Add the walls of the cell to the wall list.
-    3. While there are walls in the list:
-        1. Pick a random wall from the list.
-        If only one of the two cells that the wall divides is visited, then:
-            1. Make the wall a passage and mark the unvisited cell as part of the maze.
-            2. Add the neighboring walls of the cell to the wall list.
-        2. Remove the wall from the list.
- */
+    public static ArrayList<Integer> kruskal() {
+        for (int w : walls) {
+            ArrayList<HashSet<Block>> neighbSets = new ArrayList<>();
+            Block[] neighbours = Block.getTwoNeighbours(w, cells);
+            //If it's a border cell, skip to next wall
+            if (neighbours[1] == null) continue;
+            boolean distinct = true;
+            for (HashSet<Block> s : sets) {
+                if (s.contains(neighbours[0]) && s.contains(neighbours[1])) {
+                    distinct = false;
+                    break;
+                } else if (s.contains(neighbours[0]) || s.contains(neighbours[1])) {
+                    //Adds sets where those neighbouring blocks are, to combine them together later
+                    neighbSets.add(s);
+                }
+            }
+            if (distinct) {
+                remWalls.remove((Integer) w);
+                //Combine the neighbouring sets into one (union)
+                HashSet<Block> union = new HashSet<>();
+                union.addAll(neighbSets.get(0));
+                union.addAll(neighbSets.get(1));
+                sets.add(union);
+                //Remove the separate occurences of those sets as they have been unionized
+                sets.removeAll(neighbSets);
+            }
+        }
+        return remWalls;
+    }
+    //------------------------------------KRUSKAL'S END------------------------------------------------
 
-public static ArrayList<Integer> prim() {
+    /*-----------------------RANDOMIZED PRIM'S ALGORITHM-----------------------------------------------
+        1. Start with a grid full of walls.
+        2. Pick a cell, mark it as part of the maze. Add the walls of the cell to the wall list.
+        3. While there are walls in the list:
+            1. Pick a random wall from the list.
+            If only one of the two cells that the wall divides is visited, then:
+                1. Make the wall a passage and mark the unvisited cell as part of the maze.
+                2. Add the neighboring walls of the cell to the wall list.
+            2. Remove the wall from the list.
+     */
+
+    public static ArrayList<Integer> prim() {
     ArrayList<Integer> walllist = new ArrayList<>();
     Block b = cells[0][0];
     visited.replace(b,false,true);
@@ -264,26 +264,5 @@ public static ArrayList<Integer> prim() {
 
 //------------------------------------PRIM'S END---------------------------------------------------
 
-    //Main for testing algorithms before integrating them into the UI
-    public static void main(String[] args) {
-        size = 4;
-        numWalls = 2*size*size+2*size;
-        createWallsList();
 
-        Block[][] test = createListOfBlocks();
-        for (Block[] w : test) {
-            for (Block k : w) {
-                //System.out.println(k);
-            }
-        }
-        setUpForGen();
-        //kruskalsPrep();
-        //ArrayList<Integer> w = dfGeneration(test[0][0]);
-        //ArrayList<Integer> w = iterative();
-        //ArrayList<Integer> w = kruskal();
-        ArrayList<Integer> w = prim();
-
-        convertToRegBlocks(w);
-
-    }
 }

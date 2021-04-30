@@ -50,25 +50,21 @@ public class MazeSolver {
                 int[] oneWay = passages.get(0);
                 int[] anotherWay = passages.get(1);
                 if (visitedTimes[oneWay[0]][oneWay[1]] < visitedTimes[anotherWay[0]][anotherWay[1]]) {
-                    prev = curr_coord;
 
                     curr = maze[oneWay[0]][oneWay[1]];
                     x = oneWay[1];
                     y = oneWay[0];
-                    visitedTimes[y][x]++;
-
-                    curr_coord = new int[]{y, x};
 
                 } else {
-                    prev = curr_coord;
                     curr = maze[anotherWay[0]][anotherWay[1]];
                     x = anotherWay[1];
                     y = anotherWay[0];
-                    visitedTimes[y][x]++;
-
-                    curr_coord = new int[]{y, x};
 
                 }
+                prev = curr_coord;
+                visitedTimes[y][x]++;
+                curr_coord = new int[]{y, x};
+
             } else {
                 //3 or 4 possible ways. Get rightmost one. In order: top right bottom left
                 //For more explanation see Notes
